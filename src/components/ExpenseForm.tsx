@@ -1,18 +1,32 @@
-import { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { Button } from '@/components/ui/button';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
-import { useToast } from '@/hooks/use-toast';
+import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { useToast } from "@/hooks/use-toast";
 
 const expenseSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  amount: z.number().min(0.01, 'Amount must be greater than 0'),
-  date: z.string().min(1, 'Date is required'),
+  name: z.string().min(1, "Name is required"),
+  amount: z.number().min(0.01, "Amount must be greater than 0"),
+  date: z.string().min(1, "Date is required"),
   is_recurring: z.boolean(),
   recurring_period: z.string().optional(),
 });
@@ -20,22 +34,27 @@ const expenseSchema = z.object({
 type ExpenseFormValues = z.infer<typeof expenseSchema>;
 
 interface ExpenseFormProps {
-  onAddExpense: (expense: Omit<Expense, 'id' | 'project_id'>) => void;
+  onAddExpense: (expense: Omit<Expense, "id" | "project_id">) => void;
   initialData?: Expense;
 }
 
-const ExpenseForm: React.FC<ExpenseFormProps> = ({ onAddExpense, initialData }) => {
-  const [isRecurring, setIsRecurring] = useState(initialData?.is_recurring || false);
+const ExpenseForm: React.FC<ExpenseFormProps> = ({
+  onAddExpense,
+  initialData,
+}) => {
+  const [isRecurring, setIsRecurring] = useState(
+    initialData?.is_recurring || false
+  );
   const { toast } = useToast();
 
   const form = useForm<ExpenseFormValues>({
     resolver: zodResolver(expenseSchema),
     defaultValues: initialData || {
-      name: '',
+      name: "",
       amount: 0,
-      date: new Date().toISOString().split('T')[0],
+      date: new Date().toISOString().split("T")[0],
       is_recurring: false,
-      recurring_period: 'monthly',
+      recurring_period: "monthly",
     },
   });
 
@@ -52,7 +71,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onAddExpense, initialData }) 
       form.reset();
     }
     toast({
-      title: initialData ? 'Expense updated' : 'Expense added',
+      title: initialData ? "Ausgabe Updated" : "Ausgabe hinzugefügt",
       description: `${data.name} - $${data.amount}`,
     });
   };
@@ -67,7 +86,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onAddExpense, initialData }) 
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder="Expense name" {...field} />
+                <Input placeholder="Ausgaben Name" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -78,9 +97,15 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onAddExpense, initialData }) 
           name="amount"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Amount</FormLabel>
+              <FormLabel>Preis</FormLabel>
               <FormControl>
-                <Input type="number" step="0.01" placeholder="0.00" {...field} onChange={(e) => field.onChange(parseFloat(e.target.value))} />
+                <Input
+                  type="number"
+                  step="0.01"
+                  placeholder="0.00"
+                  {...field}
+                  onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -91,7 +116,7 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onAddExpense, initialData }) 
           name="date"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Date</FormLabel>
+              <FormLabel>Datum</FormLabel>
               <FormControl>
                 <Input type="date" {...field} />
               </FormControl>
@@ -105,9 +130,9 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onAddExpense, initialData }) 
           render={({ field }) => (
             <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
               <div className="space-y-0.5">
-                <FormLabel className="text-base">Recurring Expense</FormLabel>
+                <FormLabel className="text-base">Abonnement Ausgabe</FormLabel>
                 <FormDescription>
-                  Is this a recurring expense?
+                  Ist dies eine Abonnement Ausgabe?
                 </FormDescription>
               </div>
               <FormControl>
@@ -128,18 +153,21 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onAddExpense, initialData }) 
             name="recurring_period"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Recurring Period</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormLabel>Abonnement Zeitraum</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select a recurring period" />
+                      <SelectValue placeholder="Abonnement Zeitraum auswählen" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="daily">Daily</SelectItem>
-                    <SelectItem value="weekly">Weekly</SelectItem>
-                    <SelectItem value="monthly">Monthly</SelectItem>
-                    <SelectItem value="yearly">Yearly</SelectItem>
+                    <SelectItem value="daily">Täglich</SelectItem>
+                    <SelectItem value="weekly">Wöchentlich</SelectItem>
+                    <SelectItem value="monthly">Monatlich</SelectItem>
+                    <SelectItem value="yearly">Jährlich</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -147,7 +175,9 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({ onAddExpense, initialData }) 
             )}
           />
         )}
-        <Button type="submit">{initialData ? 'Update Expense' : 'Add Expense'}</Button>
+        <Button type="submit">
+          {initialData ? "Update Ausgabe" : "Ausgabe hinzufügen"}
+        </Button>
       </form>
     </Form>
   );

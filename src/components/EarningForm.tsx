@@ -1,18 +1,32 @@
-import { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { Button } from '@/components/ui/button';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
-import { useToast } from '@/hooks/use-toast';
+import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { useToast } from "@/hooks/use-toast";
 
 const earningSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  amount: z.number().min(0.01, 'Amount must be greater than 0'),
-  date: z.string().min(1, 'Date is required'),
+  name: z.string().min(1, "Name is required"),
+  amount: z.number().min(0.01, "Amount must be greater than 0"),
+  date: z.string().min(1, "Date is required"),
   is_recurring: z.boolean(),
   recurring_period: z.string().optional(),
 });
@@ -20,22 +34,27 @@ const earningSchema = z.object({
 type EarningFormValues = z.infer<typeof earningSchema>;
 
 interface EarningFormProps {
-  onAddEarning: (earning: Omit<Earning, 'id' | 'project_id'>) => void;
+  onAddEarning: (earning: Omit<Earning, "id" | "project_id">) => void;
   initialData?: Earning;
 }
 
-const EarningForm: React.FC<EarningFormProps> = ({ onAddEarning, initialData }) => {
-  const [isRecurring, setIsRecurring] = useState(initialData?.is_recurring || false);
+const EarningForm: React.FC<EarningFormProps> = ({
+  onAddEarning,
+  initialData,
+}) => {
+  const [isRecurring, setIsRecurring] = useState(
+    initialData?.is_recurring || false
+  );
   const { toast } = useToast();
 
   const form = useForm<EarningFormValues>({
     resolver: zodResolver(earningSchema),
     defaultValues: initialData || {
-      name: '',
+      name: "",
       amount: 0,
-      date: new Date().toISOString().split('T')[0],
+      date: new Date().toISOString().split("T")[0],
       is_recurring: false,
-      recurring_period: 'monthly',
+      recurring_period: "monthly",
     },
   });
 
@@ -52,7 +71,7 @@ const EarningForm: React.FC<EarningFormProps> = ({ onAddEarning, initialData }) 
       form.reset();
     }
     toast({
-      title: initialData ? 'Earning updated' : 'Earning added',
+      title: initialData ? "Einnahme updated" : "Einnahme hinzugefügt",
       description: `${data.name} - $${data.amount}`,
     });
   };
@@ -67,7 +86,7 @@ const EarningForm: React.FC<EarningFormProps> = ({ onAddEarning, initialData }) 
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder="Earning name" {...field} />
+                <Input placeholder="Einnahmen Name" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -78,9 +97,15 @@ const EarningForm: React.FC<EarningFormProps> = ({ onAddEarning, initialData }) 
           name="amount"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Amount</FormLabel>
+              <FormLabel>Preis</FormLabel>
               <FormControl>
-                <Input type="number" step="0.01" placeholder="0.00" {...field} onChange={(e) => field.onChange(parseFloat(e.target.value))} />
+                <Input
+                  type="number"
+                  step="0.01"
+                  placeholder="0.00"
+                  {...field}
+                  onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -91,7 +116,7 @@ const EarningForm: React.FC<EarningFormProps> = ({ onAddEarning, initialData }) 
           name="date"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Date</FormLabel>
+              <FormLabel>Datum</FormLabel>
               <FormControl>
                 <Input type="date" {...field} />
               </FormControl>
@@ -105,9 +130,9 @@ const EarningForm: React.FC<EarningFormProps> = ({ onAddEarning, initialData }) 
           render={({ field }) => (
             <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
               <div className="space-y-0.5">
-                <FormLabel className="text-base">Recurring Earning</FormLabel>
+                <FormLabel className="text-base">Abonnement Einnahme</FormLabel>
                 <FormDescription>
-                  Is this a recurring earning?
+                  Ist dies eine Abonnement Einnahme?
                 </FormDescription>
               </div>
               <FormControl>
@@ -128,18 +153,21 @@ const EarningForm: React.FC<EarningFormProps> = ({ onAddEarning, initialData }) 
             name="recurring_period"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Recurring Period</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormLabel>Abonnement Zeitraum</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select a recurring period" />
+                      <SelectValue placeholder="Abonnement Zeitraum auswählen" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="daily">Daily</SelectItem>
-                    <SelectItem value="weekly">Weekly</SelectItem>
-                    <SelectItem value="monthly">Monthly</SelectItem>
-                    <SelectItem value="yearly">Yearly</SelectItem>
+                    <SelectItem value="daily">Täglich</SelectItem>
+                    <SelectItem value="weekly">Wöchentlich</SelectItem>
+                    <SelectItem value="monthly">Monatlich</SelectItem>
+                    <SelectItem value="yearly">Jährlich</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -147,7 +175,9 @@ const EarningForm: React.FC<EarningFormProps> = ({ onAddEarning, initialData }) 
             )}
           />
         )}
-        <Button type="submit">{initialData ? 'Update Earning' : 'Add Earning'}</Button>
+        <Button type="submit">
+          {initialData ? "Updated Einnahme" : "Einnahme hinzugefügen"}
+        </Button>
       </form>
     </Form>
   );

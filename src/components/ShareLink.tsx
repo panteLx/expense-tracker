@@ -1,12 +1,18 @@
-import { useState, useCallback } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { useToast } from '@/hooks/use-toast';
+import { useState, useCallback } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { useToast } from "@/hooks/use-toast";
 
 interface ShareLinkProps {
   itemId: number;
-  itemType: 'expense' | 'earning';
+  itemType: "expense" | "earning";
 }
 
 const ShareLink: React.FC<ShareLinkProps> = ({ itemId, itemType }) => {
@@ -14,35 +20,38 @@ const ShareLink: React.FC<ShareLinkProps> = ({ itemId, itemType }) => {
   const { toast } = useToast();
 
   const getShareLink = useCallback(() => {
-    if (typeof window !== 'undefined' && window.location) {
+    if (typeof window !== "undefined" && window.location) {
       const url = new URL(window.location.href);
       url.search = `?share=${itemType}-${itemId}`;
       return url.toString();
     }
-    return '';
+    return "";
   }, [itemId, itemType]);
 
   const copyToClipboard = () => {
     const shareLink = getShareLink();
     if (shareLink) {
-      navigator.clipboard.writeText(shareLink).then(() => {
-        toast({
-          title: 'Link Copied',
-          description: 'The share link has been copied to your clipboard.',
+      navigator.clipboard
+        .writeText(shareLink)
+        .then(() => {
+          toast({
+            title: "Link kopiert",
+            description: "Der Link wurde in deiner Zwischenablage gespeichert.",
+          });
+          setIsDialogOpen(false);
+        })
+        .catch(() => {
+          toast({
+            title: "Error",
+            description: "Failed to copy link. Please try again.",
+            variant: "destructive",
+          });
         });
-        setIsDialogOpen(false);
-      }).catch(() => {
-        toast({
-          title: 'Error',
-          description: 'Failed to copy link. Please try again.',
-          variant: 'destructive',
-        });
-      });
     } else {
       toast({
-        title: 'Error',
-        description: 'Unable to generate share link. Please try again.',
-        variant: 'destructive',
+        title: "Error",
+        description: "Unable to generate share link. Please try again.",
+        variant: "destructive",
       });
     }
   };
@@ -50,15 +59,21 @@ const ShareLink: React.FC<ShareLinkProps> = ({ itemId, itemType }) => {
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">Share</Button>
+        <Button variant="outline" size="sm">
+          Teilen
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Share {itemType.charAt(0).toUpperCase() + itemType.slice(1)} Details</DialogTitle>
+          <DialogTitle>
+            Teile {itemType.charAt(0).toUpperCase() + itemType.slice(1)} Details
+          </DialogTitle>
         </DialogHeader>
-        <div className="flex items-center space-x-2">
+        <div className="flex sm:flex-nowrap flex-wrap items-center space-x-2">
           <Input value={getShareLink()} readOnly />
-          <Button onClick={copyToClipboard}>Copy</Button>
+          <Button onClick={copyToClipboard} className="mt-4 sm:mt-0">
+            Kopieren
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
