@@ -18,8 +18,6 @@ import {
   deleteExpense,
   deleteEarning,
   getProjectById,
-  getExpenseById,
-  getEarningById,
 } from "@/lib/db";
 import { useToast } from "@/hooks/use-toast";
 

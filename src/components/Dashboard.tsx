@@ -15,15 +15,11 @@ import EarningForm from "./EarningForm";
 import ShareLink from "./ShareLink";
 import {
   format,
-  isAfter,
   isBefore,
   isWithinInterval,
   startOfYear,
   endOfYear,
   differenceInDays,
-  differenceInWeeks,
-  differenceInMonths,
-  differenceInYears,
   eachMonthOfInterval,
   startOfMonth,
   endOfMonth,
