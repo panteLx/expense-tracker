@@ -22,7 +22,8 @@ const ShareLink: React.FC<ShareLinkProps> = ({ itemId, itemType }) => {
   const getShareLink = useCallback(() => {
     if (typeof window !== "undefined" && window.location) {
       const url = new URL(window.location.href);
-      url.search = `?share=${itemType}-${itemId}`;
+      // Generate the URL in the format /share/type/id
+      url.pathname = `/share/${itemType}/${itemId}`;
       return url.toString();
     }
     return "";

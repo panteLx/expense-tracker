@@ -50,16 +50,20 @@ function App() {
     };
 
     loadSavedProject();
-    checkForSharedItem();
+    checkForSharedItem(); // Update for shared item handling
   }, []);
 
   const checkForSharedItem = () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const shareParam = urlParams.get("share");
-    if (shareParam) {
-      const [type, id] = shareParam.split("-");
-      if ((type === "expense" || type === "earning") && id) {
-        setSharedItem({ type, id: parseInt(id, 10) });
+    const path = window.location.pathname; // Get the full path
+    const pathParts = path.split("/"); // Split the path by "/"
+
+    // Expecting URL like /share/type/id
+    if (pathParts[1] === "share" && pathParts.length === 4) {
+      const type = pathParts[2];
+      const id = parseInt(pathParts[3], 10);
+
+      if ((type === "expense" || type === "earning") && !isNaN(id)) {
+        setSharedItem({ type, id });
       }
     }
   };
