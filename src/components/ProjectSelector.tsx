@@ -80,7 +80,7 @@ const ProjectSelector: React.FC<ProjectSelectorProps> = ({
           onProjectChange(projects.find((p) => p.id === value)!)
         }
       >
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger className="w-[150px]">
           <SelectValue placeholder="Projekt auswählen" />
         </SelectTrigger>
         <SelectContent>

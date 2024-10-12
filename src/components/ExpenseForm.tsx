@@ -68,7 +68,17 @@ const ExpenseForm: React.FC<ExpenseFormProps> = ({
   const onSubmit = (data: ExpenseFormValues) => {
     onAddExpense(data);
     if (!initialData) {
-      form.reset();
+      // Setze das gesamte Formular inklusive Dropdown zurück
+      form.reset({
+        name: "",
+        amount: 0,
+        date: new Date().toISOString().split("T")[0],
+        is_recurring: false,
+        recurring_period: "monthly", // Setze das Dropdown zurück auf den Standardwert
+      });
+
+      // Setze auch den lokalen Zustand für das Dropdown-Menü zurück
+      setIsRecurring(false);
     }
     toast({
       title: initialData ? "Ausgabe Updated" : "Ausgabe hinzugefügt",

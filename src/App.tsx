@@ -157,10 +157,10 @@ function App() {
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <div className="container mx-auto p-4">
-        <header className="flex flex-wrap justify-between items-center mb-8">
-          <h1 className="text-2xl font-bold">Tracker</h1>
-          <div className="flex flex-wrap items-center space-y-2 sm:space-y-0 sm:space-x-4">
+      <div className="container md:max-w-[60%] mx-auto p-4">
+        <header className="flex flex-wrap justify-between items-center mb-2 md:mb-8">
+          <h1 className="text-2xl font-bold hidden md:flex">Tracker</h1>
+          <div className="flex flex-wrap items-center space-x-2 sm:space-x-4">
             <ProjectSelector
               onProjectChange={handleProjectChange}
               currentProject={currentProject}
@@ -171,10 +171,14 @@ function App() {
 
         {currentProject ? (
           <Tabs defaultValue="dashboard">
-            <TabsList>
-              <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="dashboard" className="rounded-l-lg">
+                Dashboard
+              </TabsTrigger>
               <TabsTrigger value="add-expense"> Neue Ausgabe</TabsTrigger>
-              <TabsTrigger value="add-earning">Neue Einnahme</TabsTrigger>
+              <TabsTrigger value="add-earning" className="rounded-r-lg">
+                Neue Einnahme
+              </TabsTrigger>
             </TabsList>
             <TabsContent value="dashboard">
               <Dashboard

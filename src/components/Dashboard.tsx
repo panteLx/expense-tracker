@@ -64,6 +64,8 @@ const Dashboard: React.FC<DashboardProps> = ({
   });
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
   const [editingEarning, setEditingEarning] = useState<Earning | null>(null);
+  const [isDialogOpenExpense, setIsDialogOpenExpense] = useState(false);
+  const [isDialogOpenEarning, setIsDialogOpenEarning] = useState(false);
 
   const getTimeUntilNextRecurrence = (item: Expense | Earning) => {
     if (!item.is_recurring) return "N/A";
@@ -195,10 +197,10 @@ const Dashboard: React.FC<DashboardProps> = ({
     <div className="space-y-4">
       <DatePickerWithRange dateRange={dateRange} setDateRange={setDateRange} />
 
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-3 text-center">
         <Card>
           <CardHeader>
-            <CardTitle>Alle Ausgaben</CardTitle>
+            <CardTitle>Alle Ausgaben (ausgewählter Zeitraum)</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold">${totalExpenses.toFixed(2)}</p>
@@ -206,7 +208,7 @@ const Dashboard: React.FC<DashboardProps> = ({
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Alle Einnahmen</CardTitle>
+            <CardTitle>Alle Einnahmen (ausgewählter Zeitraum)</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold">${totalEarnings.toFixed(2)}</p>
@@ -214,7 +216,7 @@ const Dashboard: React.FC<DashboardProps> = ({
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Net Einnahmen</CardTitle>
+            <CardTitle>Net Einnahmen (ausgewählter Zeitraum)</CardTitle>
           </CardHeader>
           <CardContent>
             <p
@@ -228,7 +230,7 @@ const Dashboard: React.FC<DashboardProps> = ({
         </Card>
       </div>
 
-      <Card>
+      <Card className="text-center">
         <CardHeader>
           <CardTitle>Finanz Übersicht</CardTitle>
         </CardHeader>
@@ -248,17 +250,17 @@ const Dashboard: React.FC<DashboardProps> = ({
         </CardContent>
       </Card>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-2 text-center md:text-left">
         <Card>
           <CardHeader>
             <CardTitle>Ausgaben</CardTitle>
           </CardHeader>
           <CardContent>
-            <ScrollArea className="h-[300px]">
+            <ScrollArea className="h-[500px] md:h-[300px]">
               {expenses.map((expense) => (
                 <div
                   key={expense.id}
-                  className="sm:flex sm:justify-between items-center mb-2"
+                  className="md:flex md:justify-between items-center mb-2"
                 >
                   <span>
                     {expense.name} - ${expense.amount.toFixed(2)}
@@ -276,15 +278,18 @@ const Dashboard: React.FC<DashboardProps> = ({
                       </>
                     )}
                   </span>
-                  <div className="">
-                    <Dialog>
+                  <div className="mt-2 md:mt-0">
+                    <Dialog
+                      open={isDialogOpenExpense}
+                      onOpenChange={setIsDialogOpenExpense}
+                    >
                       <DialogTrigger asChild>
                         <Button
                           variant="outline"
                           size="sm"
                           onClick={() => setEditingExpense(expense)}
                         >
-                          Edit
+                          Bearbeiten
                         </Button>
                       </DialogTrigger>
                       <DialogContent>
@@ -300,6 +305,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                                 project_id: editingExpense.project_id,
                               });
                               setEditingExpense(null);
+                              setIsDialogOpenExpense(false);
                             }}
                             initialData={editingExpense}
                           />
@@ -328,11 +334,11 @@ const Dashboard: React.FC<DashboardProps> = ({
             <CardTitle>Einnahmen</CardTitle>
           </CardHeader>
           <CardContent>
-            <ScrollArea className="h-[300px]">
+            <ScrollArea className="h-[500px] md:h-[300px]">
               {earnings.map((earning) => (
                 <div
                   key={earning.id}
-                  className="sm:flex sm:justify-between items-center mb-2"
+                  className="md:flex md:justify-between items-center mb-2"
                 >
                   <span>
                     {earning.name} - ${earning.amount.toFixed(2)}
@@ -351,8 +357,11 @@ const Dashboard: React.FC<DashboardProps> = ({
                     )}
                   </span>
 
-                  <div>
-                    <Dialog>
+                  <div className="mt-2 md:mt-0">
+                    <Dialog
+                      open={isDialogOpenEarning}
+                      onOpenChange={setIsDialogOpenEarning}
+                    >
                       <DialogTrigger asChild>
                         <Button
                           variant="outline"
@@ -375,6 +384,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                                 project_id: editingEarning.project_id,
                               });
                               setEditingEarning(null);
+                              setIsDialogOpenEarning(false);
                             }}
                             initialData={editingEarning}
                           />
