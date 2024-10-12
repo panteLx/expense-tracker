@@ -20,6 +20,7 @@ import {
   getProjectById,
 } from "@/lib/db";
 import { useToast } from "@/hooks/use-toast";
+import PinAccessComponent from "./components/CheckPin";
 
 function App() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
@@ -31,6 +32,8 @@ function App() {
     id: number;
   } | null>(null);
   const { toast } = useToast();
+
+  const [hasAccess, setHasAccess] = useState(false); // Status für den Zugriff auf die Seite
 
   useEffect(() => {
     const loadSavedProject = async () => {
@@ -142,6 +145,11 @@ function App() {
     }
   };
 
+  // Pin-Zugriffsprüfung
+  const handlePinAccess = () => {
+    setHasAccess(true); // Zugriff gewähren
+  };
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -151,6 +159,14 @@ function App() {
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <SharedItemView itemType={sharedItem.type} itemId={sharedItem.id} />
         <Toaster />
+      </ThemeProvider>
+    );
+  }
+
+  if (!hasAccess) {
+    return (
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+        <PinAccessComponent correctPin="4056" onAccess={handlePinAccess} />
       </ThemeProvider>
     );
   }
